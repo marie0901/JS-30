@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+
+const canvas = document.querySelector("#draw");
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+ctx.strokeStyle = "#BADA55";
+ctx.lineWidth = 100;
+
+let isDrowing = false;
+let lastX = 0;
+let lastY = 0;
+let hue = 0;
+let width = 1;
+let grow = true;
+
+canvas.addEventListener('mousedown',(e)=> {
+  lastX = e.offsetX;
+  lastY = e.offsetY;
+  isDrowing = true
+} );
+canvas.addEventListener('mouseup',()=> isDrowing = false);
+canvas.addEventListener('mouseout',()=> isDrowing = false);
+
+canvas.addEventListener('mousemove',draw);
+
+
+
+function draw(e) {
+  if (!isDrowing) return;
+  console.log(lastX);
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+  ctx.lineWidth = width;
+  ctx.beginPath();
+  ctx.moveTo(lastX,lastY);
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+  [lastX,lastY]=[e.offsetX, e.offsetY];
+  hue++;
+  if (hue>=360) hue = 0;
+  if (grow) {
+    width++;
+    if (width >= 100) grow = false;
+  }
+  else {
+    width--;
+    if (width <= 1) grow = true;
+  }
+}
+
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+
+</body>
+</html>
